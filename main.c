@@ -28,10 +28,6 @@ size_t get_file_size (const char *filename)
   return file_status.st_size;
 }
 
-inline float get_percent (float total, float value)
-{
-  return (float) value / total * 100;
-}
 
 
 int main(int argc, char *argv[])
@@ -41,10 +37,6 @@ int main(int argc, char *argv[])
 
   FILE *file_in;
   FILE *file_out;
-
-  //char *buffer;
-
-//  char buffer[BUFSIZE] = {0};
 
   char *buf;
 
@@ -58,7 +50,45 @@ int main(int argc, char *argv[])
   size_t bytes_to_write;
 
   if (argc < 3)
+    {
+     printf ("============================\n");
+     printf ("copyfsync by Peter Semiletov\n");
+     printf ("============================\n");
+
+     printf ("The utility to copy file with synchronize \n");
+     printf ("after each copying iteration.\n");
+     printf ("Good for copy large file to USB stick.\n");
+
+     printf ("============================\n");
+
+     printf ("Usage:\n");
+
+
+     printf ("copyfsync filename destnation_dir\n");
+     printf ("or\n");
+     printf ("copyfsync buffer_size filename destnation_dir\n");
+
+    printf ("\n");
+
+   printf ("Examples...\n");
+
+   printf ("Copy movie.avi to /run/media/rox/FLASHDRIVE/:\n");
+
+   printf ("copyfsync movie.avi /run/media/rox/FLASHDRIVE/\n");
+
+   printf ("Copy movie.avi to /run/media/rox/FLASHDRIVE/ with 4 MB buffer (default 2 MB):\n");
+
+   printf ("copyfsync 4 movie.avi /run/media/rox/FLASHDRIVE/\n");
+
+
+   printf ("============================\n");
+   printf ("If you like this program you can donate via:\n");
+    printf ("Paypal: peter.semiletov@gmail.com\n");
+     printf ("BTC: 1PCo2zznEGMFJey4qFKGQ8CoFK2nzNnJJf\n");
+     printf ("============================\n");
+
      return 0;
+    }
 
   if (argc == 4)
     {
@@ -107,20 +137,15 @@ int main(int argc, char *argv[])
      }
 
 
-  //file_in = fopen(argv[1], "r");
-  //file_out = fopen(argv[2], "w");
 
   buf = (char*) malloc(DYNBUFSIZE);
-  //memset (buf, 0, BUFSIZE);
 
-//  bytes_total = get_file_size ("/mnt/big1/mus/KINOSHKI/Polustanok_DVDRip.avi");
 
   bytes_total = get_file_size (fname_out);
 
   printf("\rFile size MB:%u\n",bytes_total / 1048576);
 
 
-  //file_out = fopen ("/run/media/rox/FLASHDRIVE/Polustanok_DVDRip.avi", "w+");
 
    file_out = fopen (fname_out, "w+");
 
@@ -138,44 +163,30 @@ int main(int argc, char *argv[])
 
    while (1)
         {
-//         bytes_readed = fread(buffer, sizeof(char), BUFSIZE, file_in);
 
            bytes_readed = fread(buf, sizeof(char), DYNBUFSIZE, file_in);
 
 
-        //printf("222 \n");
-
 
         if (bytes_readed)
-           {  // fread success
+           {
 
             bytes_total_readed += bytes_readed;
-//            float d = get_percent ((float) bytes_total, (float)bytes_total_readed);
 
-
-            //float d = (float) bytes_total / (float) bytes_total_readed;
-
-            //printf("Number of characters has been read = %i\n", bytes_readed);
-            //printf("buffer = %s\n", buffer);
-
-            //printf("\r%.2f%%", d);
-            //printf("\n");
-
-            //printf("\rBytes wrote %u from %u", bytes_total_readed, bytes_total);
 
             printf("\rMB Wrote %u", bytes_total_readed / 1048576);
 
 
             fflush(stdout);
-            //int r = fwrite(buffer, sizeof (char), bytes_readed, file_out);
             int r = fwrite(buf, sizeof (char), bytes_readed, file_out);
 
 
 
             fflush(file_out);
-            fsync(file_out_no);
+            //fsync(file_out_no);
 
-         //   printf("buffer write done\n");
+            fdatasync (file_out_no);
+
 
 
            }
@@ -188,16 +199,9 @@ int main(int argc, char *argv[])
              break;
             }
 
-       //printf("333 \n");
 
       }
 
-   //r = fwrite(file, A, strlen(A));
-   //if (r < -1) {
-     // perror("write()");
-      //exit(1); }
-
-   //fsync(file_out);
 
    free (buf);
 
