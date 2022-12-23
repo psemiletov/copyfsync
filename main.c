@@ -96,53 +96,42 @@ int main(int argc, char *argv[])
      }
 
   if (argc == 4)
-    {
+     {
      //argv[1] is the buffer size in MB
 
-     printf ("!!!!\n");
+      char *ptr;
+    //  long ret;
 
-     char *ptr;
-     long ret;
+      buffer_size = strtol(argv[1], &ptr, 10) * 1048576;
 
-     buffer_size = strtol(argv[1], &ptr, 10) * 1048576;
+      fname_in = argv[2];
+      strcat (fname_out, argv[3]);
 
+      if (! check_for_slash (argv[3]))
+          strcat (fname_out, "/");
 
-     fname_in = argv[2];
-
-     strcat (fname_out, argv[3]);
-
-     if (! check_for_slash (argv[3]))
-        strcat (fname_out, "/");
-
-     strcat (fname_out, basename (argv[2]));
+      strcat (fname_out, basename (argv[2]));
     }
   else
   if (argc == 3)
-    {
-     fname_in = argv[1];
+     {
+      fname_in = argv[1];
 
-     strcat (fname_out, argv[2]);
+      strcat (fname_out, argv[2]);
 
-     if (! check_for_slash (argv[2]))
-        strcat (fname_out, "/");
+      if (! check_for_slash (argv[2]))
+         strcat (fname_out, "/");
 
-     strcat (fname_out, basename (argv[1]));
-    }
-
-
+      strcat (fname_out, basename (argv[1]));
+     }
 
 
-    //file_in = fopen("/home/rox/devel/syncopy/1.txt", "r");
+  bytes_total = get_file_size (fname_in);
 
-  //file_in = fopen("/mnt/big1/mus/KINOSHKI/Polustanok_DVDRip.avi", "r");
-  //file_in = fopen (argv[1], "r");
+  file_in = fopen (fname_in, "r");
 
-   bytes_total = get_file_size (fname_in);
-
-   file_in = fopen (fname_in, "r");
-
-   if (! file_in)
-      {
+  if (! file_in)
+     {
       printf ("Cannot open file %s\n", fname_in);
       exit(1);
      }
@@ -153,67 +142,53 @@ int main(int argc, char *argv[])
 
 
 
-  printf ("Input file name: %s\n", fname_in);
-//  printf("Input file size,  MB:%u\n",bytes_total / 1048576);
-  printf("Input file size, bytes: %zu\n", bytes_total);
+   printf ("Input file name: %s\n", fname_in);
+   printf("Input file size, bytes: %zu\n", bytes_total);
 
-  printf ("Output file name: %s\n", fname_out);
-  printf ("Buffer size, bytes: %zu\n",buffer_size);
+   printf ("Output file name: %s\n", fname_out);
+   printf ("Buffer size, bytes: %zu\n",buffer_size);
 
-  file_out = fopen (fname_out, "w+");
+   printf("Let\'s go! \n");
+
+
+   file_out = fopen (fname_out, "w+");
 
 
    if (! file_out)
       {
-      printf("Cannot create file %s\n", fname_out);
-      exit(1);
-     }
+       printf("Cannot create file %s\n", fname_out);
+       exit(1);
+      }
 
-     int file_out_no = fileno (file_out);
+  int file_out_no = fileno (file_out);
 
 
-   printf("Start! \n");
-
-   while (1)
+  while (1)
         {
+         bytes_readed = fread (buf, sizeof(char), buffer_size, file_in);
 
-           bytes_readed = fread(buf, sizeof(char), buffer_size, file_in);
+         if (bytes_readed)
+            {
+             bytes_total_readed += bytes_readed;
 
+             printf("\rMB Wrote %zu", bytes_total_readed / 1048576);
+             fflush(stdout);
 
-
-        if (bytes_readed)
-           {
-
-            bytes_total_readed += bytes_readed;
-
-
-            printf("\rMB Wrote %zu", bytes_total_readed / 1048576);
-
-
-            fflush(stdout);
-            int r = fwrite(buf, sizeof (char), bytes_readed, file_out);
-
-
-
-            fflush(file_out);
-            //fsync(file_out_no);
-
-            fdatasync (file_out_no);
-
-
-
-           }
+             int r = fwrite(buf, sizeof (char), bytes_readed, file_out);
+             fflush(file_out);
+             //fsync(file_out_no);
+             fdatasync (file_out_no);
+            }
         else
             {
              if (ferror(file_in))
-                perror( "Error reading myfile" );
-             else if (feof(file_in))
-                   perror( "EOF found" );
-             break;
+                printf ("Error reading %s\n", fname_in);
+             else
+                 if (feof (file_in))
+                    printf ("EOF found");
+             break; //exit from loop
             }
-
-
-      }
+        }
 
 
    free (buf);
