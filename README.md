@@ -1,20 +1,17 @@
 # copyfsync
-==========================================
 program by Peter Semiletov
 https://github.com/psemiletov/copyfsync
-==========================================
 
 The utility to copy file with synchronize
 after each copying iteration.
 Good for copy large file to USB stick when copying slow
 or stalled.
-Some people happy with
+Some people happy with ```/etc/sysctl.conf``` file:
 
- /etc/sysctl.conf file:
----
+```
 vm.dirty_bytes=50331648
 vm.dirty_background_bytes=16777216
----
+```
 
 But it does not work in my case. So I wrote a simple copying program
 that call fsync (actually, fflush and fdatasync) after each copying iteration.
