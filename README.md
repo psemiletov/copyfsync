@@ -33,17 +33,17 @@ copyfsync buffer_size filename destnation_dir
 
 **Examples...**
 
-Copy movie.avi to /run/media/rox/FLASHDRIVE/:
+Copy movie.avi to /run/media/username/FLASHDRIVE/:
 
 
 ```console
-copyfsync movie.avi /run/media/rox/FLASHDRIVE/
+copyfsync movie.avi /run/media/username/FLASHDRIVE/
 ```
 
-Copy movie.avi to /run/media/rox/FLASHDRIVE/ with 4 MB buffer (default 2 MB):
+Copy movie.avi to /run/media/username/FLASHDRIVE with 4 MB buffer (default 2 MB):
 
 ```console
-copyfsync 4 movie.avi /run/media/rox/FLASHDRIVE/
+copyfsync 4 movie.avi /run/media/username/FLASHDRIVE/
 ```
 
 **If you like this program you can donate via:**
