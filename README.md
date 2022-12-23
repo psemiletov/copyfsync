@@ -1,2 +1,55 @@
 # copyfsync
-The utility to copy files (to USB sticks for example) with fsync
+==========================================
+program by Peter Semiletov
+https://github.com/psemiletov/copyfsync
+==========================================
+
+The utility to copy file with synchronize
+after each copying iteration.
+Good for copy large file to USB stick when copying slow
+or stalled.
+Some people happy with
+
+ /etc/sysctl.conf file:
+---
+vm.dirty_bytes=50331648
+vm.dirty_background_bytes=16777216
+---
+
+But it does not work in my case. So I wrote a simple copying program
+that call fsync (actually, fflush and fdatasync) after each copying iteration.
+So copyfsync copy data by portions with the buffer size (2 MB by default) and sync buffer
+after earch read/write iteration.
+
+Usage:
+
+```console
+copyfsync filename destnation_dir
+```
+
+or:
+
+```console
+copyfsync buffer_size filename destnation_dir
+
+
+**Examples...**
+
+Copy movie.avi to /run/media/rox/FLASHDRIVE/:
+
+
+```console
+copyfsync movie.avi /run/media/rox/FLASHDRIVE/
+```
+
+Copy movie.avi to /run/media/rox/FLASHDRIVE/ with 4 MB buffer (default 2 MB):
+
+```console
+copyfsync 4 movie.avi /run/media/rox/FLASHDRIVE/
+```
+
+============================
+If you like this program you can donate via:
+Paypal: peter.semiletov@gmail.com
+BTC: 1PCo2zznEGMFJey4qFKGQ8CoFK2nzNnJJf
+============================
