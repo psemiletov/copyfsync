@@ -29,6 +29,16 @@ size_t get_file_size (const char *filename)
 }
 
 
+int string_ends_with(const char * str, const char * suffix)
+{
+  int str_len = strlen(str);
+  int suffix_len = strlen(suffix);
+
+  return
+    (str_len >= suffix_len) &&
+    (0 == strcmp(str + (str_len-suffix_len), suffix));
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -103,12 +113,11 @@ int main(int argc, char *argv[])
      fname_in = argv[2];
 
      strcat (fname_out, argv[3]);
-     strcat (fname_out, "/");
+
+     if (! string_ends_with (argv[3], "/"))
+        strcat (fname_out, "/");
+
      strcat (fname_out, basename (argv[2]));
-
-     printf ("fname_out: %s\n", fname_out);
-     printf ("DYNBUFSIZE: %d\n", DYNBUFSIZE);
-
     }
   else
   if (argc == 3)
@@ -116,11 +125,17 @@ int main(int argc, char *argv[])
      fname_in = argv[1];
 
      strcat (fname_out, argv[2]);
-     strcat (fname_out, "/");
-     strcat (fname_out, basename (argv[1]));
 
-     printf ("fname_out: %s\n", fname_out);
+     if (! string_ends_with (argv[2], "/"))
+        strcat (fname_out, "/");
+
+     strcat (fname_out, basename (argv[1]));
     }
+
+
+   printf ("Input file name: %s\n", fname_in);
+   printf ("Output file name: %s\n", fname_out);
+   printf ("Buffer size: %d\n", DYNBUFSIZE);
 
 
     //file_in = fopen("/home/rox/devel/syncopy/1.txt", "r");
@@ -132,7 +147,7 @@ int main(int argc, char *argv[])
 
   if (! file_in)
       {
-      perror("cannot open file\n");
+      printf ("Cannot open file %s\n", fname_in);
       exit(1);
      }
 
@@ -152,14 +167,14 @@ int main(int argc, char *argv[])
 
    if (! file_out)
       {
-      printf("cannot create file %s\n", fname_out);
+      printf("Cannot create file %s\n", fname_out);
       exit(1);
      }
 
      int file_out_no = fileno (file_out);
 
 
-   printf("1111 \n");
+   printf("Start! \n");
 
    while (1)
         {
@@ -210,7 +225,7 @@ int main(int argc, char *argv[])
 
    printf("\n");
 
-   printf("good \n");
+   printf("Good!\n");
 
 
    return 0;
