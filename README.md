@@ -47,6 +47,13 @@ Copy movie.avi to /run/media/username/FLASHDRIVE with 4 MB buffer (default 2 MB)
 copyfsync 4 movie.avi /run/media/username/FLASHDRIVE/
 ```
 
+Buffer size can be set in kbytes using the "K" suffix. Set the 1000 kbytes buffer:
+
+```console
+copyfsync 1000K movie.avi /run/media/username/FLASHDRIVE/
+```
+
+
 **If you like this program you can donate via:**
 
 Paypal: peter.semiletov@gmail.com

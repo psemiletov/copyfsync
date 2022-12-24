@@ -27,10 +27,19 @@ size_t get_file_size (const char *filename)
 }
 
 
-
+/*
 int check_for_slash (const char *filename)
 {
   if (filename[strlen (filename) - 1] == '/')
+     return 1;
+
+  return 0;
+}
+*/
+
+int check_for_end (const char *filename, char end)
+{
+  if (filename[strlen (filename) - 1] == end)
      return 1;
 
   return 0;
@@ -52,6 +61,7 @@ int main(int argc, char *argv[])
   size_t bytes_total = 0;
   size_t bytes_total_readed = 0;
   size_t bytes_readed = 0;
+  size_t bytes_written = 0;
 
 
   if (argc < 3)
@@ -97,17 +107,18 @@ int main(int argc, char *argv[])
 
   if (argc == 4)
      {
-     //argv[1] is the buffer size in MB
 
       char *ptr;
-    //  long ret;
 
-      buffer_size = strtol(argv[1], &ptr, 10) * 1048576;
+      if (check_for_end (argv[1], 'K') || check_for_end (argv[1], 'k'))
+          buffer_size = strtol(argv[1], &ptr, 10) * 1024; //buffer size directrly in kbytes
+      else
+          buffer_size = strtol(argv[1], &ptr, 10) * 1048576; //argv[1] is given in mbytes by default
 
       fname_in = argv[2];
       strcat (fname_out, argv[3]);
 
-      if (! check_for_slash (argv[3]))
+      if (! check_for_end(argv[3], '/'))
           strcat (fname_out, "/");
 
       strcat (fname_out, basename (argv[2]));
@@ -119,7 +130,7 @@ int main(int argc, char *argv[])
 
       strcat (fname_out, argv[2]);
 
-      if (! check_for_slash (argv[2]))
+      if (! check_for_end (argv[2], '/'))
          strcat (fname_out, "/");
 
       strcat (fname_out, basename (argv[1]));
@@ -139,8 +150,6 @@ int main(int argc, char *argv[])
 
 
    buf = (char*) malloc(buffer_size);
-
-
 
    printf ("Input file name: %s\n", fname_in);
    printf("Input file size, bytes: %zu\n", bytes_total);
@@ -171,13 +180,22 @@ int main(int argc, char *argv[])
             {
              bytes_total_readed += bytes_readed;
 
-             printf("\rMB Wrote %zu", bytes_total_readed / 1048576);
+//             printf("\rMB Wrote %zu", bytes_total_readed / 1048576);
+
+
+
              fflush(stdout);
 
-             int r = fwrite(buf, sizeof (char), bytes_readed, file_out);
+             bytes_written = fwrite(buf, sizeof (char), bytes_readed, file_out);
              fflush(file_out);
              //fsync(file_out_no);
              fdatasync (file_out_no);
+
+             printf("\rMB Wrote %f", (float) bytes_total_readed / 1048576);
+
+             if (bytes_written != bytes_readed)
+                printf ("bytes_written %zu != bytes_readed %zu", bytes_written, bytes_readed);
+
             }
         else
             {
