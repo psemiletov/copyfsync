@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
   if (argc < 3)
      {
       printf ("==========================================\n");
-      printf ("|copyfsync 1.0.0 by Peter Semiletov      |\n");
+      printf ("|copyfsync 1.0.1 by Peter Semiletov      |\n");
       printf ("|https://github.com/psemiletov/copyfsync |\n");
       printf ("==========================================\n");
 
@@ -84,6 +84,10 @@ int main(int argc, char *argv[])
 
       printf ("copyfsync 4 movie.avi /run/media/rox/FLASHDRIVE/\n");
 
+      printf ("Copy movie.avi to /run/media/rox/FLASHDRIVE/ with 1000 kbytes buffer:\n");
+
+      printf ("copyfsync 1000K movie.avi /run/media/rox/FLASHDRIVE/\n");
+
 
       printf ("============================\n");
       printf ("If you like this program you can donate via:\n");
@@ -100,9 +104,12 @@ int main(int argc, char *argv[])
       char *ptr;
 
       if (check_for_end (argv[1], 'K') || check_for_end (argv[1], 'k'))
-          buffer_size = strtol(argv[1], &ptr, 10) * 1024; //buffer size directrly in kbytes
+          buffer_size = strtol(argv[1], &ptr, 10) * 1024; //buffer size directly in kbytes
       else
           buffer_size = strtol(argv[1], &ptr, 10) * 1048576; //argv[1] is given in mbytes by default
+
+      if (buffer_size == 0)
+         buffer_size = 1048576 * 2;
 
       fname_in = argv[2];
       strcat (fname_out, argv[3]);

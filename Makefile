@@ -7,6 +7,8 @@ clean:
 	$(RM) copyfsync
 
 
+uninstall:
+	rm $(prefix)/bin/copyfsync
 
 install: copyfsync
 	install -m 0755 copyfsync $(prefix)/bin
