@@ -23,19 +23,9 @@ size_t get_file_size (const char *filename)
   if (stat(filename, &file_status) < 0)
       return -1;
 
-  return file_status.st_size; //WRONG NEGATIVE VAL!!!
+  return file_status.st_size;
 }
 
-
-/*
-int check_for_slash (const char *filename)
-{
-  if (filename[strlen (filename) - 1] == '/')
-     return 1;
-
-  return 0;
-}
-*/
 
 int check_for_end (const char *filename, char end)
 {
@@ -44,7 +34,6 @@ int check_for_end (const char *filename, char end)
 
   return 0;
 }
-
 
 
 int main(int argc, char *argv[])
@@ -67,7 +56,7 @@ int main(int argc, char *argv[])
   if (argc < 3)
      {
       printf ("==========================================\n");
-      printf ("|copyfsync by Peter Semiletov            |\n");
+      printf ("|copyfsync 1.0.0 by Peter Semiletov      |\n");
       printf ("|https://github.com/psemiletov/copyfsync |\n");
       printf ("==========================================\n");
 
