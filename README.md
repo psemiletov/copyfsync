@@ -5,7 +5,7 @@ https://github.com/psemiletov/copyfsync
 
 The utility to copy file with synchronize
 after each copying iteration.
-Good for copy large file to USB stick when copying slow
+Good for copy large file to USB stick when copying is slow
 or stalled.
 Some people are happy with ```/etc/sysctl.conf``` or
 ```/etc/sysctl.d/99-sysctl.conf``` file:
