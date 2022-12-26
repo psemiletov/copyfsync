@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
   if (argc < 3)
      {
       printf ("==========================================\n");
-      printf ("|copyfsync 1.0.1 by Peter Semiletov      |\n");
+      printf ("|copyfsync 1.0.2 by Peter Semiletov      |\n");
       printf ("|https://github.com/psemiletov/copyfsync |\n");
       printf ("==========================================\n");
 
@@ -108,8 +108,10 @@ int main(int argc, char *argv[])
       else
           buffer_size = strtol(argv[1], &ptr, 10) * 1048576; //argv[1] is given in mbytes by default
 
-      if (buffer_size == 0)
-         buffer_size = 1048576 * 2;
+      if (buffer_size == 0 || buffer_size > 16777216)
+         buffer_size = 1048576 * 2; //set to default 2
+
+       // 33554432 bytes = 32 mb
 
       fname_in = argv[2];
       strcat (fname_out, argv[3]);

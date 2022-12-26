@@ -1,2 +1,3 @@
++ set the upper limit for the buffer size (16 mb)
 + Makefile uninstall target
 * check buffer size
